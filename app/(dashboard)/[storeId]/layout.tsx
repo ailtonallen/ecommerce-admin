@@ -17,21 +17,20 @@ export default async function DashboardLayout({
     redirect('/sign-in');
   }
 
-  const billboard = await prismadb.billboard
   const store = await prismadb.store.findFirst({ 
     where: {
       id: params.storeId,
-      userId
+      userId,
     }
    });
 
   if (!store) {
-    redirect('/')
+    redirect('/');
   };
 
   return (
     <>
-<Navbar/>
+      <Navbar />
       {children}
     </>
   );

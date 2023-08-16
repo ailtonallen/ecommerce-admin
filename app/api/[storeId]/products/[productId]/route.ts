@@ -80,14 +80,7 @@ export async function PATCH(
 
     const body = await req.json();
     
-    const { 
-      name,
-      price,
-      categoryId,
-      colorId,
-      sizeId,
-      images,
-      isFeatured,
+    const {name,  price,  categoryId,  colorId,  sizeId,  images,      isFeatured,
       isArchived,
      } = body;
     
@@ -95,16 +88,32 @@ export async function PATCH(
       return new NextResponse("Não autenticado", { status: 403 });
     }
 
-    if (!label) {
-      return new NextResponse("Label é requirido", { status: 400 });
+    if (!name) {
+      return new NextResponse("Nome do produto.", { status: 400 });
     }
 
-    if (!imageUrl) {
-      return new NextResponse("URL da imagem é requirido", { status: 400 });
+    if (!price) {
+      return new NextResponse("Preço do produto.", { status: 400 });
+    }
+
+    if (!categoryId) {
+      return new NextResponse("Categoria do produto.", { status: 400 });
+    }
+
+    if (!sizeId) {
+      return new NextResponse("Tamanho do produto.", { status: 400 });
+    }
+
+    if (!colorId) {
+      return new NextResponse("Preço do produto.", { status: 400 });
+    }
+
+    if (!images || !images.length) {
+      return new NextResponse("Foto do produto.", { status: 400 });
     }
 
     if (!params.productId) {
-      return new NextResponse("Billboard id é requirido", { status: 400 });
+      return new NextResponse(" É necssario o Id do Produto", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -118,16 +127,37 @@ export async function PATCH(
       return new NextResponse("Não autorizado", { status: 405 });
     }
 
-    const product = await prismadb.product.update({
+   await prismadb.product.update({
       where: {
         id: params.productId,
       },
       data: {
         name,
         price,
+        categoryId,
+        colorId,
+        sizeId,
+        images: {
+          deleteMany:{}
+        },
+        isFeatured,
+        isArchived
       }
     });
-  
+    const product = await prismadb.product.update({
+      where: {
+        id: params.productId
+      },
+      data: {
+        images: {
+          createMany: {
+            data: [
+              ...images.map((image: { url: string }) => image),
+            ],
+          },
+        },
+      },
+    })
     return NextResponse.json(product);
   } catch (error) {
     console.log('[PRODUCT_PATCH]', error);
