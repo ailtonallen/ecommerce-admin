@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
-
+import { useOrigin } from "@/hooks/use-origin"
 
 
 
@@ -107,7 +107,11 @@ toast.success("Loja removida.")
                 </form>
             </Form>
             <Separator/>
-            <ApiAlert title="test" description="test-desc" variant="public"/>
+            <ApiAlert 
+        title="NEXT_PUBLIC_API_URL" 
+        variant="public" 
+        description={`${origin}/api/${params.storeId}`}
+      />
         </>
     )
 }
