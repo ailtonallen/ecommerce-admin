@@ -49,7 +49,7 @@ window.location.assign(`/${response.data.id}`);
     return(
     <Modal 
     title="Criar uma loja"
-    descripcion="Adiciona uma loja para gerenciar produtos e categorias"
+    description="Adiciona uma loja para gerenciar produtos e categorias"
     isOpen={storeModal.isOpen}
     onClose={storeModal.onClose}>
   <div className="space-y-5 py-3 pb-5">
